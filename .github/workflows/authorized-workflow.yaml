@@ -1,0 +1,28 @@
+name: authorized-workflow
+
+on:
+  workflow_call:
+    inputs:
+      execution_role_arn:
+        type: string
+        required: true
+        description: AWS IAM role Arn to be assumed
+      execution_region:
+        type: string
+        required: true
+        description: AWS region (e.g. ca-central-1)
+
+jobs:
+  assume-role:
+    name: assume AWS role
+    runs-on: ubuntu-latest
+
+  steps:
+    - name: configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1-node16
+      with:
+        role-to-assume: ${{ inputs.execution_role_arn }}
+        aws-region:  ${{ inputs.execution_region }}
+
+    - name: check caller
+      run: aws sts get-caller-identity
