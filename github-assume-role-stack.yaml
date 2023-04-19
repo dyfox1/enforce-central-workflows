@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Creates an example OIDC provider and IAM role to be assumed by a specific GitHub Actions workflow.
+
+Parameters:
+  GitHubOrgName:
+    Type: String
+    Description: The GitHub Organization that holds our calling repo
+  CallingRepoName:
+    Type: String
+    Description: The name of the repo that will call our re-usable workflow
+  CentralRepoName:
+    Type: String
+    Description: The name of the repo that will host our centrally managed workflow
+  AuthorizedWorkflowFile:
+    Type: String
+    Description: The name.extenstion of our re-usable workflow file (e.g. authorized-workflow.yaml)
+  
+Resources:
+  GitHubOIDC:
+    Type: AWS::IAM::OIDCProvider
+    Properties: #https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services#adding-the-identity-provider-to-aws
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sts.amazonaws.com
+      ThumbprintList:
+        # https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc_verify-thumbprint.html
+        - 6938fd4d98bab03faadb97b34396831e3780aea1
+
+  GitHubRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${CallingRepoName}-repo-role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated: !Join ["", ["arn:aws:iam::", !Ref "AWS::AccountId", ":oidc-provider/token.actions.githubusercontent.com"]]
+            Condition:
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubOrgName}/${CallingRepoName}:job_workflow_ref:${GitHubOrgName}/${CentralRepoName}/.github/workflows/{AuthorizedWorkflowFile}@refs/heads/*
+              StringEquals:
+                token.actions.githubusercontent.com:aud: "sts.amazonaws.com"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+
+Outputs:
+  DeploymentRoleArn:
+    Description: Arn of the deployment role that was created by this stack.  Used when calling from authorized GitHub actions workflows.
+    Value: !GetAtt GitHubRole.Arn

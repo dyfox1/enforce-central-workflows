@@ -1,0 +1,26 @@
+name: caller-workflow
+
+on:
+  push:
+    paths:
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  call-authorized-workflow:
+    name: call authorized workflow (should succeed)
+    uses: ./.github/workflows/authorized-workflow.yaml
+    with:
+      execution_role_arn: arn:aws:iam::166078800564:role/enforce-central-workflows-repo-role
+      execution_region: ca-central-1
+
+  call-unauthorized-workflow:
+      name: call unauthorized workflow (should fail)
+      uses: ./.github/workflows/unauthorized-workflow.yaml
+      with:
+        execution_role_arn: arn:aws:iam::166078800564:role/enforce-central-workflows-repo-role
+        execution_region: ca-central-1

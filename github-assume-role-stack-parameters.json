@@ -1,0 +1,18 @@
+[
+    {
+      "ParameterKey": "GitHubOrgName",
+      "ParameterValue": "dyfox1"
+    },
+    {
+      "ParameterKey": "CallingRepoName",
+      "ParameterValue": "enforce-central-workflows"
+    },
+    {
+      "ParameterKey": "CentralRepoName",
+      "ParameterValue": "enforce-central-workflows"
+    },
+    {
+      "ParameterKey": "AuthorizedWorkflowFile",
+      "ParameterValue": "authorized-workflow.yaml"
+    }
+]
