@@ -15,12 +15,12 @@ jobs:
     name: call authorized workflow (should succeed)
     uses: ./.github/workflows/authorized-workflow.yaml
     with:
-      execution_role_arn: arn:aws:iam::166078800564:role/enforce-central-workflows-repo-role
+      execution_role_arn: <your_execution_role_arn>
       execution_region: ca-central-1
 
   call-unauthorized-workflow:
       name: call unauthorized workflow (should fail)
       uses: ./.github/workflows/unauthorized-workflow.yaml
       with:
-        execution_role_arn: arn:aws:iam::166078800564:role/enforce-central-workflows-repo-role
+        execution_role_arn: <your_execution_role_arn>
         execution_region: ca-central-1

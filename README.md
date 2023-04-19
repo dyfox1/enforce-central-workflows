@@ -6,10 +6,7 @@ In this simple example, the calling workflow and the re-usable workflow are in t
 In practice, the calling workflow would live in a product or workload team's repository and the re-usable workflow would be hosted in a centrally managed repository.
 
 # Setting up on the GitHub side
-
-This step only needs to be performed once on a repo.  If you are constructing repos via Terraform, you can set this property via this terraform resource: https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_repository_oidc_subject_claim_customization_template.
-
-Create or clone this repo and then run the following GitHub CLI command to customize the OIDC claims that GitHub will send when assuming roles on AWS.
+Clone this repo and then run the following GitHub CLI command to customize the OIDC claims that GitHub will send when assuming roles on AWS.
 
 More info on this command, including the permissions required for completing the call is available here: https://docs.github.com/en/rest/actions/oidc?apiVersion=2022-11-28#set-the-customization-template-for-an-oidc-subject-claim-for-a-repository
 ```
@@ -21,6 +18,8 @@ curl -L \
   https://api.github.com/repos/dyfox1/enforce-central-workflows/actions/oidc/customization/sub \
   -d '{"use_default":false,"include_claim_keys":["repo","job_workflow_ref"]}'
 ```
+
+This step only needs to be performed once on a repo and can also be performed once for the entire org if needed.  If you are constructing repos via Terraform, you can set this property via this terraform resource: https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_repository_oidc_subject_claim_customization_template.
 
 # Setting up on the AWS side
 
@@ -54,3 +53,5 @@ aws cloudformation create-stack \
     --parameters file://github-assume-role-stack-parameters.json \
     --region ca-central-1
 ```
+
+The output from this stack is a role arn.  Replace the text `<your_role_arn_here>` in the `.github/workflows/caller-workflow.yaml` file in this repo once you've deployed the AWS stack into your target account.
