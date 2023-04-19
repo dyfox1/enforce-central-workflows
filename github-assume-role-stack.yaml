@@ -39,7 +39,7 @@ Resources:
               Federated: !Join ["", ["arn:aws:iam::", !Ref "AWS::AccountId", ":oidc-provider/token.actions.githubusercontent.com"]]
             Condition:
               StringLike:
-                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubOrgName}/${CallingRepoName}:job_workflow_ref:${GitHubOrgName}/${CentralRepoName}/.github/workflows/{AuthorizedWorkflowFile}@refs/heads/*
+                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubOrgName}/${CallingRepoName}:job_workflow_ref:${GitHubOrgName}/${CentralRepoName}/.github/workflows/${AuthorizedWorkflowFile}@refs/heads/*
               StringEquals:
                 token.actions.githubusercontent.com:aud: "sts.amazonaws.com"
       ManagedPolicyArns:
