@@ -17,12 +17,12 @@ jobs:
     name: assume AWS role
     runs-on: ubuntu-latest
 
-  steps:
-    - name: configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1-node16
-      with:
-        role-to-assume: ${{ inputs.execution_role_arn }}
-        aws-region:  ${{ inputs.execution_region }}
+    steps:
+      - name: configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          role-to-assume: ${{ inputs.execution_role_arn }}
+          aws-region:  ${{ inputs.execution_region }}
 
-    - name: check caller
-      run: aws sts get-caller-identity
+      - name: check caller
+        run: aws sts get-caller-identity
