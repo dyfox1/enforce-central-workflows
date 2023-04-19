@@ -29,18 +29,18 @@ Some parameters are required to use this stack and they are as follows:
 
 ```
 Parameters:
-  github_org_name:
+  GitHubOrgName:
     Type: String
-    Description: The GitHub Organization that holds our repo(s)
-  calling_repo_name:
+    Description: The GitHub Organization that holds our calling repo
+  CallingRepoName:
     Type: String
     Description: The name of the repo that will call our re-usable workflow
-  central_repo_name:
+  CentralRepoName:
     Type: String
     Description: The name of the repo that will host our centrally managed workflow
-  reusable_workflow_file:
+  AuthorizedWorkflowFile:
     Type: String
-    Description: The name of our re-usable workflow file (e.g. workflow.yaml)
+    Description: The name.extenstion of our re-usable workflow file (e.g. authorized-workflow.yaml)
 ```
 
 These can be subbed in as follows using example values relevant to this repo:
